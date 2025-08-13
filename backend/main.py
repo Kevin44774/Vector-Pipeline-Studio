@@ -41,6 +41,10 @@ class PipelineResponse(BaseModel):
 async def root():
     return {"message": "VectorShift Pipeline API"}
 
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "python-fastapi", "port": 8000}
+
 @app.post("/api/pipelines/parse", response_model=PipelineResponse)
 async def parse_pipeline(pipeline: PipelineData):
     """
@@ -75,4 +79,4 @@ async def parse_pipeline(pipeline: PipelineData):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

@@ -8,22 +8,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Pipeline analysis endpoint - proxy to Python backend for Part 4 assessment
   app.post("/api/pipelines/parse", async (req, res) => {
     try {
-      // First try to forward to Python backend (required for Part 4)
+      // First try to forward to Python backend (prioritized)
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/pipelines/parse', {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
+        const response = await fetch('http://localhost:8000/api/pipelines/parse', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(req.body),
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
         
         if (response.ok) {
           const data = await response.json();
+          console.log("✅ Using Python FastAPI backend");
           return res.json(data);
+        } else {
+          console.log(`❌ Python backend returned ${response.status}, falling back to Node.js`);
         }
-      } catch (pythonError) {
-        console.log("Python backend not available, using Node.js implementation");
+      } catch (pythonError: any) {
+        if (pythonError.name === 'AbortError') {
+          console.log("⏱️ Python backend timeout, using Node.js fallback");
+        } else {
+          console.log("⚠️ Python backend not available, using Node.js fallback");
+        }
       }
       
       // Fallback to Node.js implementation if Python backend is unavailable
