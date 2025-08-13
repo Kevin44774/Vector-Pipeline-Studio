@@ -29,16 +29,18 @@ export const DatabaseNode = memo(({ id, data, selected }: NodeProps) => {
         output: true
       }}
     >
-      <div className="space-y-2">
-        <label className="text-xs text-slate-400">Query</label>
-        <Textarea
-          value={query}
-          placeholder="SELECT * FROM table"
-          onChange={(e) => setQuery(e.target.value)}
-          className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 font-mono resize-none"
-          rows={2}
-        />
-      </div>
+      {selected && (
+        <div className="space-y-2">
+          <label className="text-xs text-slate-400">Query</label>
+          <Textarea
+            value={query}
+            placeholder="SELECT * FROM table"
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 font-mono resize-none"
+            rows={2}
+          />
+        </div>
+      )}
     </BaseNode>
   );
 });

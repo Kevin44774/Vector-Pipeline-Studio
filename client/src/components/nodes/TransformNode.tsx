@@ -22,7 +22,7 @@ export const TransformNode = memo(({ id, data, selected }: NodeProps) => {
       data={data}
       selected={selected}
       type="transform"
-      color="bg-rose-500"
+      color="bg-cyan-500"
       icon="🔄"
       title="Transform"
       handles={{
@@ -30,23 +30,22 @@ export const TransformNode = memo(({ id, data, selected }: NodeProps) => {
         output: true
       }}
     >
-      <div className="space-y-2">
-        <label className="text-xs text-slate-400">Operation</label>
-        <Select
-          value={operation}
-          onValueChange={(value) => setOperation(value)}
-        >
-          <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-sm text-slate-100">
-            <SelectValue placeholder="Select operation" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="uppercase">Uppercase</SelectItem>
-            <SelectItem value="lowercase">Lowercase</SelectItem>
-            <SelectItem value="trim">Trim</SelectItem>
-            <SelectItem value="reverse">Reverse</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      {selected && (
+        <div className="space-y-2">
+          <label className="text-xs text-slate-400">Operation</label>
+          <Select value={operation} onValueChange={setOperation}>
+            <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-sm">
+              <SelectValue placeholder="Select operation" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="uppercase">Uppercase</SelectItem>
+              <SelectItem value="lowercase">Lowercase</SelectItem>
+              <SelectItem value="reverse">Reverse</SelectItem>
+              <SelectItem value="trim">Trim</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
     </BaseNode>
   );
 });

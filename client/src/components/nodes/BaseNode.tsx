@@ -27,6 +27,9 @@ export const BaseNode = memo(({
   children,
   handles 
 }: BaseNodeProps) => {
+  // Determine if this node should show expanded view (when selected)
+  const isExpanded = selected;
+  
   // Color mapping for borders and handles
   const getColors = (colorClass: string) => {
     const colorMap: Record<string, { border: string; handle: string }> = {
@@ -52,6 +55,61 @@ export const BaseNode = memo(({
   const colors = getColors(color);
   const borderColor = selected ? 'border-indigo-400' : colors.border;
   
+  // Compact view (default state)
+  if (!isExpanded) {
+    return (
+      <div 
+        className={`bg-slate-800 border-2 ${borderColor} rounded-lg shadow-lg w-16 h-16 relative group hover:shadow-xl transition-all duration-200 flex items-center justify-center cursor-pointer`}
+        data-testid={`node-${type}-${id}`}
+      >
+        {/* Input Handle - Data flows IN from the left */}
+        {handles?.input && (
+          <Handle
+            type="target"
+            position={Position.Left}
+            id="input"
+            style={{ 
+              width: '8px',
+              height: '8px',
+              backgroundColor: colors.handle,
+              border: '2px solid #1e293b',
+              borderRadius: '50%',
+              left: '-4px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+            }}
+            className="hover:scale-110 transition-all duration-200"
+          />
+        )}
+        
+        {/* Output Handle - Data flows OUT to the right */}
+        {handles?.output && (
+          <Handle
+            type="source"
+            position={Position.Right}
+            id="output"
+            style={{ 
+              width: '8px',
+              height: '8px',
+              backgroundColor: colors.handle,
+              border: '2px solid #1e293b',
+              borderRadius: '50%',
+              right: '-4px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+            }}
+            className="hover:scale-110 transition-all duration-200"
+          />
+        )}
+        
+        <div className={`w-8 h-8 ${color} rounded-md flex items-center justify-center text-white text-lg`}>
+          {icon}
+        </div>
+      </div>
+    );
+  }
+
+  // Expanded view (when selected)
   return (
     <div 
       className={`bg-slate-800 border-2 ${borderColor} rounded-xl shadow-xl min-w-48 relative group hover:shadow-2xl transition-all duration-200`}

@@ -202,6 +202,12 @@ export default function PipelineEditor() {
   };
 
   const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
+    // Only set selected for visual feedback, don't open properties panel
+    setSelectedNode(node);
+  }, []);
+
+  const onNodeDoubleClick = useCallback((_event: React.MouseEvent, node: Node) => {
+    // Double-click opens the properties panel
     setSelectedNode(node);
   }, []);
 
@@ -355,6 +361,7 @@ export default function PipelineEditor() {
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onNodeClick={onNodeClick}
+                onNodeDoubleClick={onNodeDoubleClick}
                 onEdgeClick={onEdgeClick}
                 onPaneClick={onPaneClick}
                 nodeTypes={nodeTypes}
