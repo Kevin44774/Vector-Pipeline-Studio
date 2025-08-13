@@ -53,7 +53,7 @@ export function PipelineCanvas({
   onNodeClick,
   onDrop,
   onDragOver,
-  onInit
+  onInit,
 }: PipelineCanvasProps) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
@@ -71,27 +71,27 @@ export function PipelineCanvas({
           onDragOver={onDragOver}
           onNodeClick={onNodeClick}
           nodeTypes={nodeTypes}
-          className="bg-slate-950"
+          className="bg-slate-100" // Lighter canvas background
           data-testid="canvas-pipeline"
           fitView
           attributionPosition="bottom-left"
         >
-          {/* Modern subtle dotted background */}
+          {/* Light dotted background */}
           <Background
             gap={24}
             size={2}
-            color="#64748b" // slate-500 for contrast
+            color="#cbd5e1" // slate-300 for subtle dots
             variant={BackgroundVariant.Dots}
           />
 
-          {/* Controls with better contrast */}
-          <Controls className="bg-slate-800 border border-slate-600 text-slate-100 rounded-md shadow-md" />
+          {/* Controls - floating panel style */}
+          <Controls className="bg-white/90 border border-slate-300 text-slate-800 rounded-md shadow" />
 
-          {/* Minimap styled to pop slightly */}
+          {/* MiniMap - light floating panel */}
           <MiniMap
-            className="bg-slate-800 border border-slate-600 rounded-md shadow-md"
-            nodeColor="#475569"
-            maskColor="rgba(0, 0, 0, 0.3)"
+            className="bg-white/90 border border-slate-300 rounded-md shadow"
+            nodeColor="#0f172a" // dark blue-gray for visibility
+            maskColor="rgba(255, 255, 255, 0.4)"
           />
         </ReactFlow>
       </ReactFlowProvider>
