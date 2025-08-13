@@ -1,11 +1,38 @@
-import { memo } from 'react';
-import { NodeProps } from 'reactflow';
+import { memo, useEffect, useState } from 'react';
+import { NodeProps, useReactFlow } from 'reactflow';
 import { BaseNode } from './BaseNode';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 
 export const WebhookNode = memo(({ id, data, selected }: NodeProps) => {
+  const { setNodes } = useReactFlow();
+
+  // Local states so fields are editable
+  const [method, setMethod] = useState<string>(data.method ?? '');
+  const [url, setUrl] = useState<string>(data.url ?? '');
+  const [auth, setAuth] = useState<string>(data.auth ?? 'none');
+  const [retries, setRetries] = useState<number>(data.retries ?? 3);
+
+  // Push updates to React Flow
+  useEffect(() => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                method,
+                url,
+                auth,
+                retries,
+              },
+            }
+          : node
+      )
+    );
+  }, [method, url, auth, retries, id, setNodes]);
+
   return (
     <BaseNode
       id={id}
@@ -15,17 +42,14 @@ export const WebhookNode = memo(({ id, data, selected }: NodeProps) => {
       color="bg-indigo-500"
       icon="🔗"
       title="Webhook Trigger"
-      handles={{
-        input: true,
-        output: true
-      }}
+      handles={{ input: true, output: true }}
     >
       <div className="space-y-2">
         <div>
           <label className="text-xs text-slate-400">HTTP Method</label>
-          <Select value={data.method || 'POST'}>
+          <Select value={method} onValueChange={setMethod}>
             <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-sm text-slate-100">
-              <SelectValue />
+              <SelectValue placeholder="Select method" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="GET">GET</SelectItem>
@@ -36,20 +60,23 @@ export const WebhookNode = memo(({ id, data, selected }: NodeProps) => {
             </SelectContent>
           </Select>
         </div>
+
         <div>
           <label className="text-xs text-slate-400">Webhook URL</label>
           <Input
             type="url"
-            value={data.url || 'https://api.example.com/webhook'}
-            readOnly
-            className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 cursor-default"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://api.example.com/webhook"
+            className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100"
           />
         </div>
+
         <div>
           <label className="text-xs text-slate-400">Authentication</label>
-          <Select value={data.auth || 'none'}>
+          <Select value={auth} onValueChange={setAuth}>
             <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-sm text-slate-100">
-              <SelectValue />
+              <SelectValue placeholder="Select auth" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="none">None</SelectItem>
@@ -59,13 +86,14 @@ export const WebhookNode = memo(({ id, data, selected }: NodeProps) => {
             </SelectContent>
           </Select>
         </div>
+
         <div>
           <label className="text-xs text-slate-400">Retry Count</label>
           <Input
             type="number"
-            value={data.retries || 3}
-            readOnly
-            className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 cursor-default"
+            value={retries}
+            onChange={(e) => setRetries(Number(e.target.value))}
+            className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100"
           />
         </div>
       </div>

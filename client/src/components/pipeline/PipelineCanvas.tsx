@@ -1,12 +1,9 @@
-import { useCallback, useRef, useState } from 'react';
+import { Background, BackgroundVariant } from '@reactflow/background';
+import { useRef } from 'react';
 import ReactFlow, {
   Node,
   Edge,
-  addEdge,
-  useNodesState,
-  useEdgesState,
   Connection,
-  Background,
   Controls,
   MiniMap,
   ReactFlowProvider,
@@ -79,16 +76,22 @@ export function PipelineCanvas({
           fitView
           attributionPosition="bottom-left"
         >
-          <Background 
-            gap={20} 
-            size={1} 
-            color="#374151"
+          {/* Modern subtle dotted background */}
+          <Background
+            gap={24}
+            size={2}
+            color="#64748b" // slate-500 for contrast
+            variant={BackgroundVariant.Dots}
           />
-          <Controls className="bg-slate-800 border-slate-600 text-slate-100" />
-          <MiniMap 
-            className="bg-slate-800 border-slate-600"
+
+          {/* Controls with better contrast */}
+          <Controls className="bg-slate-800 border border-slate-600 text-slate-100 rounded-md shadow-md" />
+
+          {/* Minimap styled to pop slightly */}
+          <MiniMap
+            className="bg-slate-800 border border-slate-600 rounded-md shadow-md"
             nodeColor="#475569"
-            maskColor="rgba(0, 0, 0, 0.2)"
+            maskColor="rgba(0, 0, 0, 0.3)"
           />
         </ReactFlow>
       </ReactFlowProvider>

@@ -1,9 +1,20 @@
-import { memo } from 'react';
-import { NodeProps } from 'reactflow';
+import { memo, useState, useEffect } from 'react';
+import { NodeProps, useReactFlow } from 'reactflow';
 import { BaseNode } from './BaseNode';
 import { Input } from '@/components/ui/input';
 
 export const FilterNode = memo(({ id, data, selected }: NodeProps) => {
+  const { setNodes } = useReactFlow();
+  const [condition, setCondition] = useState(data.condition || '');
+
+  useEffect(() => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, condition } } : node
+      )
+    );
+  }, [condition, id, setNodes]);
+
   return (
     <BaseNode
       id={id}
@@ -22,9 +33,10 @@ export const FilterNode = memo(({ id, data, selected }: NodeProps) => {
         <label className="text-xs text-slate-400">Condition</label>
         <Input
           type="text"
-          value={data.condition || 'value > 0'}
-          readOnly
-          className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 cursor-default"
+          value={condition}
+          placeholder="e.g., value > 0"
+          onChange={(e) => setCondition(e.target.value)}
+          className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100"
         />
       </div>
     </BaseNode>

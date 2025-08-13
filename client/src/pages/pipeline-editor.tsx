@@ -190,12 +190,12 @@ export default function PipelineEditor() {
     const defaults: Record<string, any> = {
       input: { inputName: 'input_1' },
       output: { outputName: 'output_1' },
-      text: { text: 'Enter text here...', variables: [] },
+      text: { text: '', variables: [] },
       llm: { model: 'gpt-4', temperature: 0.7 },
-      database: { query: 'SELECT * FROM table' },
+      database: { query: '' },
       filter: { condition: 'value > 0' },
       transform: { operation: 'uppercase' },
-      api: { url: 'https://api.example.com', method: 'GET' },
+      api: { url: '', method: 'GET' },
       conditional: { condition: 'if value > 0' },
     };
     return defaults[type] || {};

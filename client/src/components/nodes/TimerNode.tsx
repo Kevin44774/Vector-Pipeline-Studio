@@ -22,9 +22,9 @@ export const TimerNode = memo(({ id, data, selected }: NodeProps) => {
       <div className="space-y-2">
         <div>
           <label className="text-xs text-slate-400">Type</label>
-          <Select value={data.type || 'delay'}>
+          <Select defaultValue={data.type}>
             <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-sm text-slate-100">
-              <SelectValue />
+              <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="delay">Delay</SelectItem>
@@ -39,16 +39,15 @@ export const TimerNode = memo(({ id, data, selected }: NodeProps) => {
             <label className="text-xs text-slate-400">Duration</label>
             <Input
               type="number"
-              value={data.duration || 5}
-              readOnly
-              className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 cursor-default"
+              placeholder="Enter duration"
+              className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100"
             />
           </div>
           <div>
             <label className="text-xs text-slate-400">Unit</label>
-            <Select value={data.unit || 'seconds'}>
+            <Select defaultValue={data.unit}>
               <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-sm text-slate-100">
-                <SelectValue />
+                <SelectValue placeholder="Select unit" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="seconds">Seconds</SelectItem>

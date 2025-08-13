@@ -35,4 +35,9 @@ export type NodeType =
   | 'filter' 
   | 'transform' 
   | 'api' 
-  | 'conditional';
+  | 'conditional'
+  | 'email'
+  | 'imageProcessor'
+  | 'timer'
+  | 'validation'
+  | 'webhook';

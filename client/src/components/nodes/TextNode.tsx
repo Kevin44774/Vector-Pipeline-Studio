@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 export const TextNode = memo(({ id, data, selected }: NodeProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [text, setText] = useState(data.text || 'Hello {{input}}! Welcome to {{name}}.');
+  const [text, setText] = useState(data.text ?? '');
   const [variables, setVariables] = useState<string[]>([]);
   const { setNodes } = useReactFlow();
 
@@ -14,47 +14,35 @@ export const TextNode = memo(({ id, data, selected }: NodeProps) => {
     const variableRegex = /\{\{\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\}\}/g;
     const matches: string[] = [];
     let match;
-    
     while ((match = variableRegex.exec(inputText)) !== null) {
       const variableName = match[1].trim();
       if (!matches.includes(variableName)) {
         matches.push(variableName);
       }
     }
-    
     return matches;
   }, []);
 
-  // Auto-resize textarea based on content with min/max constraints
+  // Auto-resize textarea based on content
   const autoResize = useCallback(() => {
     if (textareaRef.current) {
       const textarea = textareaRef.current;
       textarea.style.height = 'auto';
-      
-      // Calculate new height with constraints
       const scrollHeight = textarea.scrollHeight;
-      const minHeight = 60; // 3 lines minimum
-      const maxHeight = 200; // ~10 lines maximum
-      const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
-      
-      textarea.style.height = `${newHeight}px`;
+      const minHeight = 60;
+      const maxHeight = 200;
+      textarea.style.height = `${Math.min(Math.max(scrollHeight, minHeight), maxHeight)}px`;
     }
   }, []);
 
-  // Handle text changes and update variables
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
     setText(newText);
-    
-    // Extract variables and update state
-    const newVariables = extractVariables(newText);
-    setVariables(newVariables);
-    
-    // Auto-resize textarea
+    setVariables(extractVariables(newText));
     setTimeout(autoResize, 0);
   };
 
-  // Update node data in React Flow when text or variables change
+  // Save changes to React Flow node
   useEffect(() => {
     setNodes((nodes) =>
       nodes.map((node) =>
@@ -63,7 +51,7 @@ export const TextNode = memo(({ id, data, selected }: NodeProps) => {
               ...node,
               data: {
                 ...node.data,
-                text,
+                text, // no forced fallback here
                 variables,
               },
             }
@@ -72,19 +60,18 @@ export const TextNode = memo(({ id, data, selected }: NodeProps) => {
     );
   }, [text, variables, id, setNodes]);
 
-  // Sync with external updates (from PropertiesPanel)
+  // Initialize variables and auto-resize on mount
   useEffect(() => {
-    if (data.text !== text) {
-      setText(data.text || 'Hello {{input}}! Welcome to {{name}}.');
-    }
-  }, [data.text, text]);
-
-  // Initialize variables on mount
-  useEffect(() => {
-    const initialVariables = extractVariables(text);
-    setVariables(initialVariables);
+    setVariables(extractVariables(text));
     autoResize();
-  }, [text, extractVariables, autoResize]);
+  }, [extractVariables, text, autoResize]);
+
+  // Only set default text ONCE when the node is created and empty
+  useEffect(() => {
+    if (!data.text) {
+      setText(''); // leave empty so placeholder is visible
+    }
+  }, [data.text]);
 
   return (
     <BaseNode
@@ -95,10 +82,7 @@ export const TextNode = memo(({ id, data, selected }: NodeProps) => {
       color="bg-purple-500"
       icon="📝"
       title="Text"
-      handles={{
-        input: true,
-        output: true
-      }}
+      handles={{ input: true, output: true }}
     >
       <div className="space-y-2">
         <label className="text-xs text-slate-400">Template Text</label>
@@ -107,12 +91,8 @@ export const TextNode = memo(({ id, data, selected }: NodeProps) => {
           value={text}
           onChange={handleTextChange}
           className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none transition-all duration-200"
-          placeholder="Enter text with variables like {{input}} or {{name}}"
-          style={{ 
-            minHeight: '60px',
-            maxHeight: '200px',
-            overflow: 'auto'
-          }}
+          placeholder="Enter text here"
+          style={{ minHeight: '60px', maxHeight: '200px', overflow: 'auto' }}
         />
         {variables.length > 0 && (
           <div className="mt-2">

@@ -21,9 +21,10 @@ export const InputNode = memo(({ id, data, selected }: NodeProps) => {
         <label className="text-xs text-slate-400">Input Name</label>
         <Input
           type="text"
-          value={data.inputName || 'input_1'}
+          value={data.inputName || ''}
+          placeholder="input"
           readOnly
-          className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 cursor-default !border-slate-600"
+          className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 cursor-default"
         />
       </div>
     </BaseNode>

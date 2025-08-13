@@ -241,6 +241,201 @@ export function PropertiesPanel({ selectedNode, updateNodeData, deleteSelectedNo
           </div>
         );
 
+      case 'email':
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">To</label>
+              <Input
+                value={selectedNode.data.to || ''}
+                onChange={(e) => handleDataChange('to', e.target.value)}
+                className="bg-slate-800 border-slate-600 text-slate-100"
+                placeholder="recipient@example.com"
+                data-testid="input-email-to"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Subject</label>
+              <Input
+                value={selectedNode.data.subject || ''}
+                onChange={(e) => handleDataChange('subject', e.target.value)}
+                className="bg-slate-800 border-slate-600 text-slate-100"
+                placeholder="Email subject"
+                data-testid="input-email-subject"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Body</label>
+              <Textarea
+                value={selectedNode.data.body || ''}
+                onChange={(e) => handleDataChange('body', e.target.value)}
+                className="bg-slate-800 border-slate-600 text-slate-100 resize-none"
+                rows={4}
+                placeholder="Email content"
+                data-testid="textarea-email-body"
+              />
+            </div>
+          </div>
+        );
+
+      case 'imageProcessor':
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Operation</label>
+              <Select value={selectedNode.data.operation} onValueChange={(value) => handleDataChange('operation', value)}>
+                <SelectTrigger className="bg-slate-800 border-slate-600 text-slate-100" data-testid="select-image-operation">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="resize">Resize</SelectItem>
+                  <SelectItem value="crop">Crop</SelectItem>
+                  <SelectItem value="filter">Apply Filter</SelectItem>
+                  <SelectItem value="compress">Compress</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Width</label>
+              <Input
+                type="number"
+                value={selectedNode.data.width || ''}
+                onChange={(e) => handleDataChange('width', parseInt(e.target.value))}
+                className="bg-slate-800 border-slate-600 text-slate-100"
+                placeholder="800"
+                data-testid="input-image-width"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Height</label>
+              <Input
+                type="number"
+                value={selectedNode.data.height || ''}
+                onChange={(e) => handleDataChange('height', parseInt(e.target.value))}
+                className="bg-slate-800 border-slate-600 text-slate-100"
+                placeholder="600"
+                data-testid="input-image-height"
+              />
+            </div>
+          </div>
+        );
+
+      case 'timer':
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Duration (seconds)</label>
+              <Input
+                type="number"
+                value={selectedNode.data.duration || ''}
+                onChange={(e) => handleDataChange('duration', parseInt(e.target.value))}
+                className="bg-slate-800 border-slate-600 text-slate-100"
+                placeholder="30"
+                data-testid="input-timer-duration"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                checked={selectedNode.data.repeat || false}
+                onCheckedChange={(checked) => handleDataChange('repeat', checked)}
+                data-testid="switch-timer-repeat"
+              />
+              <label className="text-xs text-slate-400">Repeat</label>
+            </div>
+          </div>
+        );
+
+      case 'validation':
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Validation Type</label>
+              <Select value={selectedNode.data.validationType} onValueChange={(value) => handleDataChange('validationType', value)}>
+                <SelectTrigger className="bg-slate-800 border-slate-600 text-slate-100" data-testid="select-validation-type">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="email">Email</SelectItem>
+                  <SelectItem value="phone">Phone</SelectItem>
+                  <SelectItem value="url">URL</SelectItem>
+                  <SelectItem value="regex">Regular Expression</SelectItem>
+                  <SelectItem value="required">Required Field</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {selectedNode.data.validationType === 'regex' && (
+              <div>
+                <label className="block text-xs font-medium text-slate-400 mb-1">Regex Pattern</label>
+                <Input
+                  value={selectedNode.data.pattern || ''}
+                  onChange={(e) => handleDataChange('pattern', e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-slate-100"
+                  placeholder="^[a-zA-Z0-9]+$"
+                  data-testid="input-validation-pattern"
+                />
+              </div>
+            )}
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Error Message</label>
+              <Input
+                value={selectedNode.data.errorMessage || ''}
+                onChange={(e) => handleDataChange('errorMessage', e.target.value)}
+                className="bg-slate-800 border-slate-600 text-slate-100"
+                placeholder="Validation failed"
+                data-testid="input-validation-error"
+              />
+            </div>
+          </div>
+        );
+
+      case 'webhook':
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Webhook URL</label>
+              <Input
+                value={selectedNode.data.webhookUrl || ''}
+                onChange={(e) => handleDataChange('webhookUrl', e.target.value)}
+                className="bg-slate-800 border-slate-600 text-slate-100"
+                placeholder="https://hooks.example.com/webhook"
+                data-testid="input-webhook-url"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Method</label>
+              <Select value={selectedNode.data.method} onValueChange={(value) => handleDataChange('method', value)}>
+                <SelectTrigger className="bg-slate-800 border-slate-600 text-slate-100" data-testid="select-webhook-method">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="POST">POST</SelectItem>
+                  <SelectItem value="PUT">PUT</SelectItem>
+                  <SelectItem value="PATCH">PATCH</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1">Headers</label>
+              <Textarea
+                value={selectedNode.data.headers || ''}
+                onChange={(e) => handleDataChange('headers', e.target.value)}
+                className="bg-slate-800 border-slate-600 text-slate-100 resize-none font-mono"
+                rows={3}
+                placeholder='{"Content-Type": "application/json"}'
+                data-testid="textarea-webhook-headers"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                checked={selectedNode.data.retryOnFailure || false}
+                onCheckedChange={(checked) => handleDataChange('retryOnFailure', checked)}
+                data-testid="switch-webhook-retry"
+              />
+              <label className="text-xs text-slate-400">Retry on failure</label>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="text-slate-500 text-sm">

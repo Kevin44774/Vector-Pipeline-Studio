@@ -1,10 +1,24 @@
-import { memo } from 'react';
-import { NodeProps } from 'reactflow';
+import { memo, useState, useEffect } from 'react';
+import { NodeProps, useReactFlow } from 'reactflow';
 import { BaseNode } from './BaseNode';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export const APINode = memo(({ id, data, selected }: NodeProps) => {
+  const { setNodes } = useReactFlow();
+
+  const [url, setUrl] = useState(data.url || '');
+  const [method, setMethod] = useState(data.method || '');
+
+  // Push changes back to React Flow's node data
+  useEffect(() => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, url, method } } : node
+      )
+    );
+  }, [url, method, id, setNodes]);
+
   return (
     <BaseNode
       id={id}
@@ -20,10 +34,18 @@ export const APINode = memo(({ id, data, selected }: NodeProps) => {
       }}
     >
       <div className="space-y-2">
+        <label className="text-xs text-slate-400">URL</label>
+        <Input
+          type="text"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://api.example.com"
+          className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100"
+        />
         <label className="text-xs text-slate-400">Method</label>
-        <Select value={data.method || 'GET'}>
+        <Select value={method} onValueChange={(value) => setMethod(value)}>
           <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-sm text-slate-100">
-            <SelectValue />
+            <SelectValue placeholder="Select method" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="GET">GET</SelectItem>
@@ -32,13 +54,6 @@ export const APINode = memo(({ id, data, selected }: NodeProps) => {
             <SelectItem value="DELETE">DELETE</SelectItem>
           </SelectContent>
         </Select>
-        <label className="text-xs text-slate-400">URL</label>
-        <Input
-          type="text"
-          value={data.url || 'https://api.example.com'}
-          readOnly
-          className="w-full bg-slate-700 border-slate-600 rounded-md px-2 py-1 text-sm text-slate-100 cursor-default"
-        />
       </div>
     </BaseNode>
   );
