@@ -27,24 +27,16 @@ A modern, visual pipeline editor for creating and managing data processing workf
 - **NetworkX** for graph operations
 - **Drizzle ORM** with Neon Database
 
-## Project Structure
-
-```
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   │   ├── nodes/      # Pipeline node components
-│   │   │   ├── pipeline/   # Pipeline-specific components
-│   │   │   └── ui/         # Base UI components
-│   │   ├── pages/          # Application pages
-│   │   └── types/          # TypeScript type definitions
-├── server/                 # Express.js backend
-├── backend/                # FastAPI Python service
-└── shared/                 # Shared schemas and types
-```
 
 ## Getting Started
+```
+cd backend
 
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+npm start
+
+```
 ### Prerequisites
 
 - Node.js 18+ and npm
@@ -53,7 +45,7 @@ A modern, visual pipeline editor for creating and managing data processing workf
 
 ### Installation
 
-1. **Clone the repository** (if not already in Replit)
+1. **Clone the repository**:
 
 2. **Install dependencies**:
    ```bash
@@ -177,14 +169,6 @@ PORT=5000
 
 ## Deployment
 
-### Replit Deployment
-
-This project is optimized for deployment on Replit:
-
-1. The application automatically detects the environment
-2. Uses port 5000 (forwarded to 80/443 in production)
-3. Serves both frontend and backend from a single server
-
 ### Production Build
 
 The production build:
@@ -229,10 +213,3 @@ The production build:
 - **Modern Tooling**: Vite for fast development, Drizzle for type-safe database access
 - **Component-based**: Modular React components with proper separation of concerns
 
-## License
-
-MIT License - see LICENSE file for details.
-
----
-
-For more information or support, please refer to the documentation or create an issue in the repository.
